@@ -9,8 +9,12 @@ html, body {
   margin: 0;
   padding: 0;
   background: #000;
-  overflow: hidden;
-  height: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
 }
 
 /* ---- Canvas background ---- */
@@ -105,9 +109,8 @@ html, body {
 main {
   position: relative;
   z-index: 1;
-  padding: 150px 3vw 60px;
-  overflow-y: auto;
-  height: calc(100vh - 150px);
+  padding: 150px 3vw 120px;
+  min-height: calc(100vh - 150px);
 }
 .tab-content {
   display: none;
@@ -183,11 +186,11 @@ main {
   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
 }
 .light-grid {
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
 
 /* ---- BUTTONS ---- */
-button.action, button.scene {
+button.action, button.scene, button.light-btn {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
@@ -197,9 +200,31 @@ button.action, button.scene {
   cursor: pointer;
   transition: all 0.25s ease;
 }
-button.action:hover, button.scene:hover {
+button.action:hover, button.scene:hover, button.light-btn:hover {
   background: rgba(255,255,255,0.12);
   transform: translateY(-3px);
+}
+button.light-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  text-align: center;
+  font-weight: 500;
+}
+button.light-btn.on {
+  background: rgba(126, 214, 87, 0.2);
+  border-color: rgba(126, 214, 87, 0.4);
+}
+button.light-btn.busy,
+button.action.busy,
+button.scene.busy {
+  opacity: 0.6;
+}
+button.light-btn:disabled,
+button.action:disabled,
+button.scene:disabled {
+  cursor: wait;
 }
 button.scene.stop {
   background: rgba(255, 60, 60, 0.25);
@@ -207,6 +232,42 @@ button.scene.stop {
 }
 button.scene.stop:hover {
   background: rgba(255, 80, 80, 0.4);
+}
+
+/* ---- STATES & FEEDBACK ---- */
+.loading,
+.empty {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  padding: 1rem;
+}
+.sensor-tile.energy {
+  background: rgba(255,255,255,0.05);
+}
+
+.toast {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.toast[data-type="success"] {
+  background: rgba(39, 174, 96, 0.85);
+}
+.toast[data-type="error"] {
+  background: rgba(231, 76, 60, 0.85);
+}
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ---- SCROLLBAR ---- */
