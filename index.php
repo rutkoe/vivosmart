@@ -1,7 +1,3 @@
-<?php
-include('token.php'); // bevat $accessToken
-$haUrl = 'http://192.168.2.101:8123';
-?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -9,14 +5,12 @@ $haUrl = 'http://192.168.2.101:8123';
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VivoSmart Dashboard</title>
 <link rel="stylesheet" href="assets/styles.css">
-<script>
-const HA_URL = "<?php echo $haUrl; ?>";
-const TOKEN = "<?php echo $accessToken; ?>";
-</script>
 </head>
 
 <body>
 <canvas id="stars"></canvas>
+
+<div id="toast" class="toast hidden"></div>
 
 <header class="topbar glass">
   <div class="time" id="clock">--:--</div>
@@ -96,69 +90,7 @@ const TOKEN = "<?php echo $accessToken; ?>";
 
   <!-- LIGHTS -->
   <section id="tab-lights" class="tab-content">
-    <!-- Woonkamer -->
-    <div class="card glass">
-      <h2>Woonkamer</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.group_woonkamer">Woonkamer</button>
-        <button class="light-btn" data-entity="light.ledstrip_tv">Ledstrip TV</button>
-        <button class="light-btn" data-entity="light.ledstrip_vensterbank">Ledstrip Vensterbank</button>
-        <button class="light-btn" data-entity="light.kamerlamp">Kamerlamp</button>
-        <button class="light-btn" data-entity="light.bureaulamp">Bureaulamp</button>
-        <button class="light-btn" data-entity="switch.smartplug_1">Schemerlamp</button>
-      </div>
-    </div>
-
-    <!-- Plafondlampen -->
-    <div class="card glass">
-      <h2>Plafondlampen</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.group_woonkamer_plafond">Woonkamer Plafond</button>
-        <button class="light-btn" data-entity="light.plafondlamp">Plafondlamp</button>
-        <button class="light-btn" data-entity="light.plafondlamp1">Plafondlamp 1</button>
-      </div>
-    </div>
-
-    <!-- Slaapkamer -->
-    <div class="card glass">
-      <h2>Slaapkamer</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.extended_color_light_23">Slaapkamerlamp</button>
-        <button class="light-btn" data-entity="light.cct_slaapkamer">CCT Lamp</button>
-        <button class="light-btn" data-entity="light.rgb_slaapkamer">RGB Lamp</button>
-      </div>
-    </div>
-
-    <!-- Hobbykamer -->
-    <div class="card glass">
-      <h2>Hobbykamer</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.hobbykamer_lamp">Hobbykamer Lamp</button>
-        <button class="light-btn" data-entity="light.lightbar_hobbykamer">Lightbar</button>
-        <button class="light-btn" data-entity="switch.smartplug_2">Schemerlamp</button>
-      </div>
-    </div>
-
-    <!-- Keuken -->
-    <div class="card glass">
-      <h2>Keuken</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.group_verlichting_afzuigkap">Aanrecht Verlichting</button>
-        <button class="light-btn" data-entity="light.hue_ledstrip">Ledstrip Keuken</button>
-        <button class="light-btn" data-entity="light.keukenlamp">Keukenlamp</button>
-      </div>
-    </div>
-
-    <!-- Overige ruimtes -->
-    <div class="card glass">
-      <h2>Overige ruimtes</h2>
-      <div class="light-grid">
-        <button class="light-btn" data-entity="light.overlooplamp">Overlooplamp</button>
-        <button class="light-btn" data-entity="light.entreelamp">Entreelamp</button>
-        <button class="light-btn" data-entity="light.badkamerlamp">Badkamerlamp</button>
-        <button class="light-btn" data-entity="light.toiletlamp">Toiletlamp</button>
-      </div>
-    </div>
+    <div id="lights" class="card-group"></div>
 
     <!-- Dynamic Scenes -->
     <div class="card glass">
@@ -185,7 +117,7 @@ const TOKEN = "<?php echo $accessToken; ?>";
   </section>
 </main>
 
-<script src="assets/script.js"></script>
+<script type="module" src="assets/js/main.js"></script>
 <script src="assets/stars.js"></script>
 </body>
 </html>

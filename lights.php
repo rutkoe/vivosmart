@@ -1,10 +1,12 @@
 <?php
+require_once __DIR__ . '/config.php';
 include('token.php');
 
 if (!isset($_POST['entity_id'])) exit;
 
 $entity = $_POST['entity_id'];
-$apiUrl = 'http://192.168.2.101:8123/api/services/light/toggle';
+$domain = explode('.', $entity)[0] ?? 'light';
+$apiUrl = sprintf('%s/api/services/%s/toggle', $haUrl, $domain);
 
 $ch = curl_init($apiUrl);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
