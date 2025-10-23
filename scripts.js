@@ -13,6 +13,18 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// ====== API HELPER ======
+async function getState(entity) {
+  try {
+    const res = await fetch(`${HA_URL}/api/states/${entity}`, { headers });
+    if (!res.ok) throw new Error(`HA returned ${res.status}`);
+    return await res.json();
+  } catch (e) {
+    console.warn(`Error fetching ${entity}:`, e);
+    return null;
+  }
+}
+
 // ====== TABS ======
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
@@ -21,7 +33,10 @@ document.querySelectorAll(".tab").forEach(tab => {
     tab.classList.add("active");
     document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
     if (tab.dataset.tab === "lights") loadLights();
-    if (tab.dataset.tab === "home") loadHomeSensors();
+    if (tab.dataset.tab === "home") {
+      loadHomeSensors();
+      loadPersons();
+    }
   });
 });
 
@@ -43,17 +58,6 @@ const motionSensors = [
   "binary_sensor.presence_badkamer",
   "binary_sensor.presence_keuken"
 ];
-
-async function getState(entity) {
-  try {
-    const res = await fetch(`${HA_URL}/api/states/${entity}`, { headers });
-    if (!res.ok) throw new Error(`HA returned ${res.status}`);
-    return await res.json();
-  } catch (e) {
-    console.warn(`Error fetching ${entity}:`, e);
-    return null;
-  }
-}
 
 async function loadHomeSensors() {
   const doorsContainer = document.getElementById("doors");
@@ -93,6 +97,37 @@ async function loadHomeSensors() {
 }
 
 loadHomeSensors();
+
+// ====== PERSON LOCATIONS ======
+const persons = [
+  { id: "person.rutger", name: "Rutger" },
+  { id: "person.cindy", name: "Cindy" },
+  { id: "person.sia", name: "Sia" },
+  { id: "person.neo", name: "Neo" },
+  { id: "person.homehub", name: "HomeHub" }
+];
+
+async function loadPersons() {
+  for (const p of persons) {
+    const data = await getState(p.id);
+    if (!data) continue;
+    const el = document.querySelector(`.avatar[data-name="${p.name}"] .location`);
+    if (!el) continue;
+
+    const state = data.state;
+    const geo = data.attributes.geocoded_location || "";
+    let text = "";
+
+    if (state === "home") text = "Thuis";
+    else if (state === "not_home") text = geo ? geo : "Onderweg";
+    else text = state;
+
+    el.textContent = text;
+  }
+}
+
+loadPersons();
+setInterval(loadPersons, 60000);
 
 // ====== LIGHTS ======
 async function loadLights() {
@@ -146,8 +181,7 @@ async function loadLights() {
         headers,
         body: JSON.stringify({ entity_id: entity })
       });
-      // herlaad na korte delay zodat HA tijd heeft
-      setTimeout(loadLights, 500);
+      setTimeout(loadLights, 600);
     });
 
     lightsContainer.appendChild(button);
@@ -181,7 +215,9 @@ loadTopSensors();
 setInterval(loadTopSensors, 60000);
 
 // ====== STYLING HELPERS ======
-document.querySelectorAll(".light-btn").forEach(btn => {
-  btn.addEventListener("mouseover", () => btn.style.transform = "translateY(-2px)");
-  btn.addEventListener("mouseout", () => btn.style.transform = "");
+document.addEventListener("mouseover", e => {
+  if (e.target.classList.contains("light-btn")) e.target.style.transform = "translateY(-2px)";
+});
+document.addEventListener("mouseout", e => {
+  if (e.target.classList.contains("light-btn")) e.target.style.transform = "";
 });
