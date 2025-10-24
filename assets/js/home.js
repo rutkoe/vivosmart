@@ -20,11 +20,10 @@ const motionSensors = [
 ];
 
 const persons = [
-  { id: 'person.rutger', name: 'Rutger' },
   { id: 'person.cindy', name: 'Cindy' },
   { id: 'person.sia', name: 'Sia' },
   { id: 'person.neo', name: 'Neo' },
-  { id: 'person.homehub', name: 'HomeHub' }
+  { id: 'person.homehub', name: 'Rutger' }
 ];
 
 export async function loadHomeSensors() {
